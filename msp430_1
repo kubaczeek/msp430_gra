@@ -1,0 +1,50 @@
+#include<msp430x14x.h>
+#include "lcd.h"
+#include "portyLcd.h"
+
+unsigned char i;
+unsigned char znak, znak1, znak2, znak3, znak4, znak5, znak6, znak7;
+
+void wyswietlenieNazwyGry(char napis[], char napis2[]){ // przekazujemy tablicę znaków oraz linie, w której chcemy wyświetlić tekst
+	int n;
+	n = 0;
+	
+  	SEND_CMD(DD_RAM_ADDR); // wybór 1 linii
+	
+	while (napis[n] != 0x00){ // pętla wypisująca napis
+	SEND_CHAR(napis[n]); // wyświetlnie pojedynczego znaku
+	n++;
+  	}
+	
+	SEND_CMD(DD_RAM_ADDR2); // wybór 2 linii
+	
+	n=0; 
+	
+	while (napis2[n] != 0x00){ // pętla wypisująca napis
+	n++;
+  	}
+	
+	SEND_CMD(DD_RAM_ADDR2+16-n);
+	n=0;
+	 
+	while (napis2[n] != 0x00){ // pętla wypisująca napis
+	SEND_CHAR(napis2[n]); // wyświetlnie pojedynczego znaku
+	n++;
+  	}
+}
+
+void main( void )
+{
+char nazwaGry[] = "SZYBKI";
+char nazwaGry2[] = "SAMOCHODZIK";
+
+P2DIR |= BIT1 ;                               // STATUS LED
+WDTCTL=WDTPW+ WDTHOLD;                        // zatrzymanie WDT
+
+InitPortsLcd();                               // inicjalizacja portów  
+InitLCD();                                    // inicjalizacja LCD
+clearDisplay();                               // czyszczenie LCD  
+
+wyswietlenieNazwyGry(nazwaGry, nazwaGry2);
+
+}

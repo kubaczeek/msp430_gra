@@ -1,0 +1,130 @@
+#include<msp430x14x.h>
+#include "lcd.h"
+#include "portyLcd.h"
+
+unsigned char i;
+unsigned char znak, znak1, znak2, znak3, znak4, znak5, znak6, znak7;
+volatile short int wybor;
+
+
+void wyswietlenieNazwyGry(char napis[], char napis2[]){ // przekazujemy tablicę znaków oraz linie, w której chcemy wyświetlić tekst
+	int n;
+	n = 0;
+	
+  	SEND_CMD(DD_RAM_ADDR); // wybór 1 linii
+	
+	while (napis[n] != 0x00){ // pętla wypisująca napis
+	SEND_CHAR(napis[n]); // wyświetlnie pojedynczego znaku
+	n++;
+  	}
+	
+	SEND_CMD(DD_RAM_ADDR2); // wybór 2 linii
+	
+	n=0; 
+	
+	while (napis2[n] != 0x00){ // pętla wypisująca napis
+	n++;
+  	}
+	
+	SEND_CMD(DD_RAM_ADDR2+16-n);
+	n=0;
+	 
+	while (napis2[n] != 0x00){ // pętla wypisująca napis
+	SEND_CHAR(napis2[n]); // wyświetlnie pojedynczego znaku
+	n++;
+  	}
+}
+
+void wyborMenu(){
+  
+  	
+	int flaga=1;
+  	while(1){
+  	if((P4IN & BIT4)==0){
+	  flaga = 0;
+	  if(!(P4IN & BIT4)==0 && flaga ==0){ 
+		wybor++;
+		if(wybor%4 == 1){
+			wybor=1;
+		}
+		  
+		break;
+	  }
+	}
+	//Delayx100us(1);
+  }
+
+
+}
+
+void wyswietlenieMenu(){ // przekazujemy tablicę znaków oraz linie, w której chcemy wyświetlić tekst
+	int n= 0;
+	SEND_CMD(DD_RAM_ADDR); // wybór 1 linii
+	while(1){
+	
+	if(wybor == 1){
+		char zagraj[] = "1. Zagraj!";
+		while (zagraj[n] != 0x00){ // pętla wypisująca napis
+		SEND_CHAR(zagraj[n]); // wyświetlnie pojedynczego znaku
+		n++;
+		}
+		wyborMenu();
+		clearDisplay(); 
+	}
+		else if(wybor%4 == 2){
+		  	n=0; 
+			char zagraj[] = "2. Opis";
+			while (zagraj[n] != 0x00){ // pętla wypisująca napis
+			SEND_CHAR(zagraj[n]); // wyświetlnie pojedynczego znaku
+			n++;
+			}
+			wyborMenu();
+			clearDisplay(); 
+		}
+			else if(wybor%4 == 3){
+		  		n=0; 
+				char zagraj[] = "3. Highscore";
+				while (zagraj[n] != 0x00){ // pętla wypisująca napis
+				SEND_CHAR(zagraj[n]); // wyświetlnie pojedynczego znaku
+				n++;
+  				}
+				wyborMenu();
+				clearDisplay(); 
+			}
+				else if(wybor%4 == 0){
+		  			n=0; 
+					char zagraj[] = "4. Autorzy";
+					while (zagraj[n] != 0x00){ // pętla wypisująca napis
+					SEND_CHAR(zagraj[n]); // wyświetlnie pojedynczego znaku
+					n++;
+  					}
+					wyborMenu();
+					clearDisplay(); 
+				}
+		}	
+}
+
+	
+
+
+void main( void ){
+WDTCTL=WDTPW+ WDTHOLD;    
+
+char nazwaGry[] = "SZYBKI";
+char nazwaGry2[] = "SAMOCHODZIK";
+
+P2DIR |= BIT1 ;                            
+                     
+
+InitPortsLcd();                               // inicjalizacja portów  
+InitLCD();                                    // inicjalizacja LCD
+//clearDisplay();                               // czyszczenie LCD  
+
+//wyswietlenieNazwyGry(nazwaGry, nazwaGry2);
+
+P4DIR &= ~BIT4; //ustawienie bitu 4 na stan niski
+wyswietlenieMenu();
+
+
+
+}

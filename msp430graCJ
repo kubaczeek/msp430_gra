@@ -36,24 +36,73 @@ void wyswietlenieNazwyGry(char napis[], char napis2[]){ // przekazujemy tablicę
 }
 
 void wyborMenu(){
-  
-  	
-	int flaga=1;
+	int flaga = 1;
+	int flaga2 = 1;
+	int flaga3 = 1;
+	int flaga4 = 1;
+	
+	
   	while(1){
-  	if((P4IN & BIT4)==0){
-	  flaga = 0;
-	  if(!(P4IN & BIT4)==0 && flaga ==0){ 
+	
+	if((P4IN & BIT3)==0)		// wyjdz do menu
+	flaga4 = 0;
+		
+	if(!(P4IN & BIT3)==0 && flaga4 == 0){ 
+		wyswietlenieMenu();
+	  }	
+					// wyjdz do menu
+	
+  	if((P4IN & BIT4)==0)		// zwiekasznie
+	flaga = 0;
+		
+	if(!(P4IN & BIT4)==0 && flaga ==0){ 
 		wybor++;
-		if(wybor%4 == 1){
-			wybor=1;
-		}
-		  
+		if(wybor > 4)
+		 wybor = 4;
 		break;
 	  }
-	}
-	//Delayx100us(1);
-  }
+					// zwiekasznie
+	
+	if((P4IN & BIT5)==0)		// zmniejszanie
+	flaga2 = 0;
+		
+	if(!(P4IN & BIT5)==0 && flaga2 == 0){ 
+		wybor--;
+		 if(wybor < 1)
+		  wybor = 1;
+		break;
+	  }	
+					// zmniejszanie
+	
+	if((P4IN & BIT6)==0)		// zatwierdź
+	flaga3 = 0;
+		
+	if(!(P4IN & BIT6)==0 && flaga3 == 0){ 
+		// todo funkcja wyświetlająca
+	  }	
+					// zatwierdź	
+}
 
+void wyswietelnie wyboru(int wybor){
+	if(wybor == 1){
+		// TODO gra
+		clearDisplay(); 
+	}
+		else if(wybor == 2){
+		  	/*
+			Unikaj kamieni, aby wygrać
+			*/
+			clearDisplay(); 
+		}
+			else if(wybor == 3){
+		  		// TODO array with score
+				clearDisplay(); 
+			}
+				else if(wybor == 0){
+		  			// TODO Nazwisko imie
+					clearDisplay(); 
+				}
+		}	
 
 }
 
@@ -71,7 +120,7 @@ void wyswietlenieMenu(){ // przekazujemy tablicę znaków oraz linie, w której 
 		wyborMenu();
 		clearDisplay(); 
 	}
-		else if(wybor%4 == 2){
+		else if(wybor == 2){
 		  	n=0; 
 			char zagraj[] = "2. Opis";
 			while (zagraj[n] != 0x00){ // pętla wypisująca napis
@@ -81,7 +130,7 @@ void wyswietlenieMenu(){ // przekazujemy tablicę znaków oraz linie, w której 
 			wyborMenu();
 			clearDisplay(); 
 		}
-			else if(wybor%4 == 3){
+			else if(wybor == 3){
 		  		n=0; 
 				char zagraj[] = "3. Highscore";
 				while (zagraj[n] != 0x00){ // pętla wypisująca napis
@@ -91,7 +140,7 @@ void wyswietlenieMenu(){ // przekazujemy tablicę znaków oraz linie, w której 
 				wyborMenu();
 				clearDisplay(); 
 			}
-				else if(wybor%4 == 0){
+				else if(wybor == 0){
 		  			n=0; 
 					char zagraj[] = "4. Autorzy";
 					while (zagraj[n] != 0x00){ // pętla wypisująca napis
